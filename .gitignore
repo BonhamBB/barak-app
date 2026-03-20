@@ -41,3 +41,7 @@ real-estate-backend/.env
 
 # python
 scripts/venv/
+
+# submodules (removed - unified in main repo)
+SalesGPT/
+agents/
