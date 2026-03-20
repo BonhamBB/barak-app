@@ -38,3 +38,6 @@ next-env.d.ts
 # backend
 real-estate-backend/data/
 real-estate-backend/.env
+
+# python
+scripts/venv/

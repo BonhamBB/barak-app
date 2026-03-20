@@ -24,6 +24,9 @@ export default function AdminLayout({
               <Link href="/admin/clients" className="text-dark text-decoration-none">
                 Clients
               </Link>
+              <Link href="/admin/deal-analysis" className="text-dark text-decoration-none">
+                Deal Analysis
+              </Link>
             </nav>
           </div>
         </div>

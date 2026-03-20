@@ -7,6 +7,7 @@ import protectedRoutes from "./routes/protectedRoutes";
 import propertyRoutes from "./routes/propertyRoutes";
 import clientRoutes from "./routes/clientRoutes";
 import salesGPTRoutes from "./routes/salesGPTRoutes";
+import realEstateRoutes from "./routes/realEstateRoutes";
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ app.use("/api", protectedRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/salesgpt", salesGPTRoutes);
-
+app.use("/api/real-estate", realEstateRoutes);
 
 sequelize.sync().then(() => {
   console.log("📌 Database connected!");
