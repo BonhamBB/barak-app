@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectProperties } from "@/redux/features/propertySlice";
 import listing_data from "@/data/inner-data/ListingData";
+import { hasFinancialFields, calculateTotalMonthlyCost } from "@/types/property";
 
 interface DataType {
    itemsPerPage: number;
@@ -120,9 +121,17 @@ const UseShortedProperty = ({ itemsPerPage, page }: DataType) => {
          case "best_match":
             return filtered.filter((item) => item.type === "Best Match");
          case "price_low":
-            return filtered.sort((a, b) => a.price - b.price);
+            return filtered.sort((a, b) => {
+               const priceA = hasFinancialFields(a) ? calculateTotalMonthlyCost(a) : (a.price ?? 0);
+               const priceB = hasFinancialFields(b) ? calculateTotalMonthlyCost(b) : (b.price ?? 0);
+               return priceA - priceB;
+            });
          case "price_high":
-            return filtered.sort((a, b) => b.price - a.price);
+            return filtered.sort((a, b) => {
+               const priceA = hasFinancialFields(a) ? calculateTotalMonthlyCost(a) : (a.price ?? 0);
+               const priceB = hasFinancialFields(b) ? calculateTotalMonthlyCost(b) : (b.price ?? 0);
+               return priceB - priceA;
+            });
          default:
             return filtered;
       }
@@ -149,14 +158,20 @@ const UseShortedProperty = ({ itemsPerPage, page }: DataType) => {
       setProperties(searchingProducts);
    };
 
-   // handle Price
+   // handle Price (use total monthly cost for properties with financial fields)
+   const getEffectivePrice = (item: typeof listing_data[0]) =>
+      hasFinancialFields(item) ? calculateTotalMonthlyCost(item) : (item.price ?? 0);
    const maxPrice = all_property.filter(item => item.page === page).reduce((max, item) => {
-      return item.price > max ? item.price : max;
+      const p = getEffectivePrice(item);
+      return p > max ? p : max;
    }, 0);
    const [priceValue, setPriceValue] = useState([0, maxPrice]);
 
    useEffect(() => {
-      let filterPrice = all_property.filter((j) => j.price >= priceValue[0] && j.price <= priceValue[1]);
+      let filterPrice = all_property.filter((j) => {
+         const p = getEffectivePrice(j);
+         return p >= priceValue[0] && p <= priceValue[1];
+      });
       setProperties(filterPrice)
    }, [priceValue]);
 

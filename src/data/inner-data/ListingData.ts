@@ -52,15 +52,45 @@ interface DataType {
       garden?: string;
    };
    data_delay_time?: string;
-   price: number;
+   price?: number;
    price_text?: string;
    carousel?: string;
    type: string;
    status: string;
    amenities?: string[];
+   // Barak-app financial fields (when present, Total Monthly Cost is calculated)
+   rentPerSqm?: number;
+   mgmtFee?: number;
+   arnonaPerSqm?: number;
+   isTechDiscount?: boolean;
+   cleaningFee?: number;
+   totalArea?: number;
 }[];
 
 const listing_data: DataType[] = [
+   {
+      id: 0,
+      page: "listing_1",
+      tag: "OFFICE",
+      tag_bg: "sale",
+      carousel_thumb: [{ img: propertyThumb_1, active: "active" }, { img: propertyThumb_2 }, { img: propertyThumb_3 }],
+      title: "Azrieli - Barak Tower",
+      address: "Azrieli Center, Tel Aviv",
+      location: "Tel Aviv, Israel",
+      property_info: { sqft: 500, bed: "—", bath: "—" },
+      price: 0,
+      price_text: "m",
+      carousel: "0",
+      status: "Office Space",
+      type: "Featured",
+      amenities: ["Elevator", "Parking", "Wifi", "A/C"],
+      rentPerSqm: 180,
+      mgmtFee: 35,
+      arnonaPerSqm: 32,
+      isTechDiscount: true,
+      cleaningFee: 12,
+      totalArea: 500,
+   },
    {
       id: 1,
       page: "listing_1",

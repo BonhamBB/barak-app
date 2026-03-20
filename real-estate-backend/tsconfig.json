@@ -7,11 +7,11 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "noImplicitAny": false,
     "moduleResolution": "node",
     "types": ["node"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
-    
   },
   "include": ["src/**/*.ts", "src/custom.d.ts"],
   "exclude": ["node_modules"]

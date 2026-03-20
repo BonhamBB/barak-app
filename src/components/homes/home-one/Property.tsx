@@ -1,10 +1,14 @@
+"use client"
 import Image from "next/image"
 import Link from "next/link";
 import property_data from "@/data/home-data/PropertyData";
-
+import PropertyFinancialSummary from "@/components/property/PropertyFinancialSummary";
 import titleShape from "@/assets/images/shape/title_shape_03.svg";
+import { useDispatch } from "react-redux";
+import { single_property } from "@/redux/features/propertySlice";
 
 const Property = () => {
+   const dispatch = useDispatch();
    return (
       <div className="property-listing-one bg-pink-two mt-150 xl-mt-120 pt-140 xl-pt-120 lg-pt-80 pb-180 xl-pb-120 lg-pb-100">
          <div className="container">
@@ -39,7 +43,7 @@ const Property = () => {
                            </div>
 
                            <div className="property-info p-25">
-                              <Link href="/listing_details_01" className="title tran3s">{item.title}</Link>
+                              <Link href="/listing_details_01" className="title tran3s" onClick={() => dispatch(single_property(item.id))}>{item.title}</Link>
                               <div className="address">{item.address}</div>
                               <ul className="style-none feature d-flex flex-wrap align-items-center justify-content-between">
                                  {item.property_info.map((info, index) => (
@@ -50,12 +54,16 @@ const Property = () => {
                                  ))}
                               </ul>
                               <div className="pl-footer top-border d-flex align-items-center justify-content-between">
-                                 <strong className="price fw-500 color-dark">
-                                    ${item.price.toLocaleString(undefined, {
-                                       minimumFractionDigits: item.price_text ? 0 : 2,
-                                       maximumFractionDigits: 2
-                                    })}{item.price_text &&<>/<sub>m</sub></>}
-                                 </strong>
+                                 {item.rentPerSqm != null && item.totalArea != null ? (
+                                    <PropertyFinancialSummary property={item} variant="card" />
+                                 ) : (
+                                    <strong className="price fw-500 color-dark">
+                                       ${(item.price ?? 0).toLocaleString(undefined, {
+                                          minimumFractionDigits: item.price_text ? 0 : 2,
+                                          maximumFractionDigits: 2
+                                       })}{item.price_text &&<>/<sub>m</sub></>}
+                                    </strong>
+                                 )}
                                  <Link href="/listing_details_01" className="btn-four rounded-circle"><i className="bi bi-arrow-up-right"></i></Link>
                               </div>
                            </div>

@@ -5,6 +5,9 @@ import Review from "@/components/inner-pages/agency/agency-details/Review"
 import Sidebar from "./Sidebar"
 import CommonBanner from "../listing-details-common/CommonBanner"
 import CommonPropertyOverview from "../listing-details-common/CommonPropertyOverview"
+import PropertyFinancialSummary from "@/components/property/PropertyFinancialSummary"
+import { useSelector } from "react-redux"
+import { selectProperty } from "@/redux/features/propertySlice"
 import CommonPropertyFeatureList from "../listing-details-common/CommonPropertyFeatureList"
 import CommonAmenities from "../listing-details-common/CommonAmenities"
 import CommonPropertyVideoTour from "../listing-details-common/CommonPropertyVideoTour"
@@ -16,7 +19,7 @@ import CommonLocation from "../listing-details-common/CommonLocation"
 import CommonReviewForm from "../listing-details-common/CommonReviewForm"
 
 const ListingDetailsOneArea = () => {
-
+   const property = useSelector(selectProperty) as Record<string, unknown>;
    const selectHandler = (e: any) => { };
 
    return (
@@ -27,6 +30,7 @@ const ListingDetailsOneArea = () => {
             <div className="property-feature-list bg-white shadow4 border-20 p-40 mt-50 mb-60">
                <h4 className="sub-title-one mb-40 lg-mb-20">Property Overview</h4>
                <CommonPropertyOverview />
+               <PropertyFinancialSummary property={property} variant="detail" />
             </div>
             <div className="row">
                <div className="col-xl-8">

@@ -46,12 +46,37 @@ interface DataType {
       total_feature: number;
    }[];
    data_delay_time?: string;
-   price: number;
+   price?: number;
    price_text?: string;
    carousel?: string;
+   rentPerSqm?: number;
+   mgmtFee?: number;
+   arnonaPerSqm?: number;
+   isTechDiscount?: boolean;
+   cleaningFee?: number;
+   totalArea?: number;
 }[];
 
 const property_data: DataType[] = [
+   {
+      id: 0,
+      page: "home_1",
+      tag: "OFFICE",
+      tag_bg: "sale",
+      carousel_thumb: [{ img: propertyThumb_1, active: "active" }, { img: propertyThumb_2 }, { img: propertyThumb_3 }],
+      title: "Azrieli - Barak Tower",
+      address: "Azrieli Center, Tel Aviv",
+      property_info: [{ icon: propertyIcon_1, feature: "sqm", total_feature: 500 }, { icon: propertyIcon_2, feature: "—", total_feature: 0 }, { icon: propertyIcon_3, feature: "—", total_feature: 0 }],
+      price: 0,
+      price_text: "m",
+      carousel: "0",
+      rentPerSqm: 180,
+      mgmtFee: 35,
+      arnonaPerSqm: 32,
+      isTechDiscount: true,
+      cleaningFee: 12,
+      totalArea: 500,
+   },
    {
       id: 1,
       page: "home_1",
