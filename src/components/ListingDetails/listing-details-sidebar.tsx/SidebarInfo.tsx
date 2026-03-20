@@ -3,7 +3,7 @@ import Link from "next/link"
 
 import infoAvatar from "@/assets/images/agent/img_06.jpg"
 
-const SidebarInfo = () => {
+const SidebarInfo = ({ contactButtonText }: { contactButtonText?: string }) => {
    return (
       <>
          <Image src={infoAvatar} alt=""
@@ -26,7 +26,7 @@ const SidebarInfo = () => {
                <li>Phone: <span><Link href="tel:+21000000000">+2100 000 0000</Link></span></li>
             </ul>
          </div>
-         <Link href="/contact" className="btn-nine text-uppercase rounded-3 w-100 mb-10">CONTACT AGENT</Link>
+         <Link href="/contact" className="btn-nine text-uppercase rounded-3 w-100 mb-10">{contactButtonText || "CONTACT AGENT"}</Link>
       </>
    )
 }

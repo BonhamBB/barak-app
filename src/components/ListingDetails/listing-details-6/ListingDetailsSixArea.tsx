@@ -10,11 +10,15 @@ import CommonProPertyScore from "../listing-details-common/CommonProPertyScore"
 import CommonPropertyFeatureList from "../listing-details-common/CommonPropertyFeatureList"
 import CommonPropertyFloorPlan from "../listing-details-common/CommonPropertyFloorPlan"
 import CommonPropertyVideoTour from "../listing-details-common/CommonPropertyVideoTour"
-import Sidebar from "../listing-details-1/Sidebar"
+import FeatureListing from "../listing-details-sidebar.tsx/FeatureListing"
+import ScheduleForm from "../listing-details-sidebar.tsx/ScheduleForm"
+import SidebarInfo from "../listing-details-sidebar.tsx/SidebarInfo"
 import Review from "@/components/inner-pages/agency/agency-details/Review"
 import LoginModal from "@/modals/LoginModal"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import NiceSelect from "@/ui/NiceSelect"
+import { api } from "@/utils/api"
+import { toast } from "react-toastify"
 
 const ListingDetailsSixArea = () => {
 
@@ -22,11 +26,46 @@ const ListingDetailsSixArea = () => {
 
    const [loginModal, setLoginModal] = useState<boolean>(false);
 
+   const [area, setArea] = useState(350);
+   const [rentPerSqm, setRentPerSqm] = useState(120);
+   const [mgmt, setMgmt] = useState(25);
+   const [arnona, setArnona] = useState(34);
+   const [cleaning, setCleaning] = useState(3);
+   const [elec, setElec] = useState(8);
+   const [parking, setParking] = useState(0);
+   const [parkingPrice, setParkingPrice] = useState(450);
+   const [grace, setGrace] = useState(0);
+   const [months, setMonths] = useState(36);
+   const [techDiscount, setTechDiscount] = useState(false);
+
+   const { monthlyTotal, yearlyTotal, effectiveMonthly, perSqm } = useMemo(() => {
+      const arnonaRate = techDiscount ? 0.65 : 1;
+      const m = (rentPerSqm + mgmt + arnona * arnonaRate + cleaning + elec) * area + parking * parkingPrice;
+      const y = m * 12;
+      const eff = months > 0 ? (m * months - m * grace) / months : m;
+      const ps = area > 0 ? Math.round(m / area) : 0;
+      return { monthlyTotal: m, yearlyTotal: y, effectiveMonthly: eff, perSqm: ps };
+   }, [area, rentPerSqm, mgmt, arnona, cleaning, elec, parking, parkingPrice, grace, months, techDiscount]);
+
+   const handleSendInquiry = async () => {
+      try {
+         await api.post("/client-events", {
+            slug: "listing_details_06",
+            propertyId: null,
+            action: "interest",
+            timestamp: new Date().toISOString(),
+         });
+         toast.success("הבקשה נשלחה! ברק יצור איתך קשר בהקדם.");
+      } catch {
+         toast.error("שגיאה בשליחה. נסה שוב.");
+      }
+   };
+
    return (
       <>
          <div className="listing-details-one theme-details-one mt-200 xl-mt-150 pb-150 xl-mb-120">
             <div className="container">
-               <CommonBanner style_3={true} />
+               <CommonBanner style_3={true} tag="להשכרה" />
                <MediaGallery style={true} />
                <div className="row pt-80 lg-pt-50">
                   <div className="col-xl-8">
@@ -95,7 +134,7 @@ const ListingDetailsSixArea = () => {
                      </div>
                      
                      <div className="review-form">
-                        <h4 className="mb-20">Leave A Reply</h4>
+                        <h4 className="mb-20">השאר תגובה</h4>
                         <p className="fs-20 lh-lg pb-15">
                            <a onClick={() => setLoginModal(true)} style={{ cursor: "pointer" }}
                               className="color-dark fw-500 text-decoration-underline">Sign in</a>
@@ -106,7 +145,112 @@ const ListingDetailsSixArea = () => {
                         </div>
                      </div>
                   </div>
-                  <Sidebar />
+                  <div className="col-xl-4 col-lg-8 me-auto ms-auto">
+            <div className="theme-sidebar-one dot-bg p-30 ms-xxl-3 lg-mt-80">
+               <div className="agent-info bg-white border-20 p-30 mb-40">
+                  <SidebarInfo contactButtonText="צור קשר" />
+               </div>
+               <div className="tour-schedule bg-white border-20 p-30 mb-40">
+                  <h5 className="mb-40">קבע פגישה</h5>
+                  <ScheduleForm />
+               </div>
+               <div className="mortgage-calculator bg-white border-20 p-30 mb-40">
+                  <h5 className="mb-40">מחשבון עלות חודשית</h5>
+                  <form onSubmit={(e) => e.preventDefault()}>
+                     <div className="row">
+                        <div className="col-6">
+                           <div className="input-box-three mb-25">
+                              <div className="label">שטח מ&quot;ר</div>
+                              <input type="number" className="type-input" value={area} onChange={(e) => setArea(Number(e.target.value) || 0)} />
+                           </div>
+                        </div>
+                        <div className="col-6">
+                           <div className="input-box-three mb-25">
+                              <div className="label">שכ&quot;ד למ&quot;ר</div>
+                              <input type="number" className="type-input" value={rentPerSqm} onChange={(e) => setRentPerSqm(Number(e.target.value) || 0)} />
+                           </div>
+                        </div>
+                        <div className="col-6">
+                           <div className="input-box-three mb-25">
+                              <div className="label">דמי ניהול למ&quot;ר</div>
+                              <input type="number" className="type-input" value={mgmt} onChange={(e) => setMgmt(Number(e.target.value) || 0)} />
+                           </div>
+                        </div>
+                        <div className="col-6">
+                           <div className="input-box-three mb-25">
+                              <div className="label">ארנונה למ&quot;ר</div>
+                              <input type="number" className="type-input" value={arnona} onChange={(e) => setArnona(Number(e.target.value) || 0)} />
+                           </div>
+                        </div>
+                        <div className="col-6">
+                           <div className="input-box-three mb-25">
+                              <div className="label">ניקיון למ&quot;ר</div>
+                              <input type="number" className="type-input" value={cleaning} onChange={(e) => setCleaning(Number(e.target.value) || 0)} />
+                           </div>
+                        </div>
+                        <div className="col-6">
+                           <div className="input-box-three mb-25">
+                              <div className="label">חשמל+מים</div>
+                              <input type="number" className="type-input" value={elec} onChange={(e) => setElec(Number(e.target.value) || 0)} />
+                           </div>
+                        </div>
+                        <div className="col-6">
+                           <div className="input-box-three mb-25">
+                              <div className="label">חניות</div>
+                              <input type="number" className="type-input" value={parking} onChange={(e) => setParking(Number(e.target.value) || 0)} />
+                           </div>
+                        </div>
+                        <div className="col-6">
+                           <div className="input-box-three mb-25">
+                              <div className="label">מחיר חניה</div>
+                              <input type="number" className="type-input" value={parkingPrice} onChange={(e) => setParkingPrice(Number(e.target.value) || 0)} />
+                           </div>
+                        </div>
+                        <div className="col-6">
+                           <div className="input-box-three mb-25">
+                              <div className="label">גרייס/חודשים</div>
+                              <input type="number" className="type-input" value={grace} onChange={(e) => setGrace(Number(e.target.value) || 0)} />
+                           </div>
+                        </div>
+                        <div className="col-6">
+                           <div className="input-box-three mb-25">
+                              <div className="label">משך חוזה</div>
+                              <input type="number" className="type-input" value={months} onChange={(e) => setMonths(Number(e.target.value) || 0)} />
+                           </div>
+                        </div>
+                        <div className="col-12">
+                           <div className="agreement-checkbox d-flex align-items-center mb-25">
+                              <input type="checkbox" id="tech-discount" checked={techDiscount} onChange={(e) => setTechDiscount(e.target.checked)} />
+                              <label htmlFor="tech-discount">הנחת טק 35% על ארנונה</label>
+                           </div>
+                        </div>
+                     </div>
+                     <div className="divider-line mt-30 mb-30 pt-20">
+                        <div className="d-flex justify-content-between mb-2">
+                           <span>סה&quot;כ חודשי:</span>
+                           <strong className="price fw-500 color-dark">₪{monthlyTotal.toLocaleString("he-IL")}</strong>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                           <span>סה&quot;כ שנתי:</span>
+                           <strong className="price fw-500 color-dark">₪{yearlyTotal.toLocaleString("he-IL")}</strong>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                           <span>עלות אפקטיבית:</span>
+                           <strong className="price fw-500 color-dark">₪{effectiveMonthly.toLocaleString("he-IL")}</strong>
+                        </div>
+                        <div className="d-flex justify-content-between">
+                           <span>עלות למ&quot;ר:</span>
+                           <strong className="price fw-500 color-dark">₪{perSqm.toLocaleString("he-IL")}</strong>
+                        </div>
+                     </div>
+                     <button type="button" className="btn-two w-100" onClick={handleSendInquiry}>
+                        <span>שלח פנייה לברק</span>
+                     </button>
+                  </form>
+               </div>
+               <FeatureListing />
+            </div>
+         </div>
                </div>
             </div>
          </div>

@@ -1,12 +1,12 @@
 import Link from "next/link"
 
-const CommonBanner = ({ style_3 }: any) => {
+const CommonBanner = ({ style_3, tag }: any) => {
    return (
       <div className="row">
          <div className="col-lg-6">
             <h3 className="property-titlee">Luxury Apartments on California.</h3>
             <div className="d-flex flex-wrap mt-10">
-               <div className={`list-type text-uppercase mt-15 me-3 ${style_3 ? "bg-white text-dark fw-500" : "text-uppercase border-20"}`}>FOR SELL</div>
+               <div className={`list-type text-uppercase mt-15 me-3 ${style_3 ? "bg-white text-dark fw-500" : "text-uppercase border-20"}`}>{tag || "FOR SELL"}</div>
                <div className="address mt-15"><i className="bi bi-geo-alt"></i> 3891 Ranchview Dr. Richardson, California
                </div>
             </div>
