@@ -55,7 +55,7 @@ const Property = () => {
                               </ul>
                               <div className="pl-footer top-border d-flex align-items-center justify-content-between">
                                  {item.rentPerSqm != null && item.totalArea != null ? (
-                                    <PropertyFinancialSummary property={item} variant="card" />
+                                    <PropertyFinancialSummary property={item as unknown as Record<string, unknown>} variant="card" />
                                  ) : (
                                     <strong className="price fw-500 color-dark">
                                        ${(item.price ?? 0).toLocaleString(undefined, {

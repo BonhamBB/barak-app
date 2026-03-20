@@ -16,7 +16,11 @@ const ProfileBody = () => {
    const [lastName, setLastName] = useState("");
    const [phoneNumber, setPhoneNumber] = useState("");
    const [about, setAbout] = useState("");
-   const token = localStorage.getItem("token"); 
+   const [token, setToken] = useState<string | null>(null);
+
+   useEffect(() => {
+      setToken(typeof window !== "undefined" ? localStorage.getItem("token") : null);
+   }, []);
 
    useEffect(() => {
       const fetchUserData = async () => {
@@ -43,10 +47,11 @@ const ProfileBody = () => {
          }
       };
 
-      fetchUserData();
-   }, []);
+      if (token) fetchUserData();
+   }, [token]);
 
    const handleSave = async () => {
+      if (!token) return;
       try {
          const res = await fetch("http://localhost:5000/api/profile", {
             method: "PUT",
